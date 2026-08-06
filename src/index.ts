@@ -63,11 +63,25 @@ async function main() {
   }
 
   if (newlyFound.length > 0) {
-    const lines = newlyFound
-      .map((n) => `[${n.label}]\n${n.showLabel} / ${n.scnsNm} (잔여 ${n.frSeatCnt}석)`)
-      .join("\n\n");
-    await sendTelegramMessage(`🍿 CGV 새 회차 오픈!\n\n${lines}\n\nhttps://cgv.co.kr`);
-    console.log(`새 회차 ${newlyFound.length}건 알림 전송 완료`);
+    // 텔레그램 메시지 길이 제한(4096자)에 걸리지 않도록 묶어서 여러 통으로 나눠 보냄
+    const CHUNK_SIZE = 25;
+    const chunks: (typeof newlyFound)[] = [];
+    for (let i = 0; i < newlyFound.length; i += CHUNK_SIZE) {
+      chunks.push(newlyFound.slice(i, i + CHUNK_SIZE));
+    }
+
+    for (let i = 0; i < chunks.length; i++) {
+      const lines = chunks[i]
+        .map((n) => `[${n.label}]\n${n.showLabel} / ${n.scnsNm} (잔여 ${n.frSeatCnt}석)`)
+        .join("\n\n");
+      const header =
+        chunks.length > 1
+          ? `🍿 CGV 새 회차 오픈! (${i + 1}/${chunks.length})`
+          : "🍿 CGV 새 회차 오픈!";
+      await sendTelegramMessage(`${header}\n\n${lines}\n\nhttps://cgv.co.kr`);
+      await new Promise((r) => setTimeout(r, 500));
+    }
+    console.log(`새 회차 ${newlyFound.length}건 알림 전송 완료 (${chunks.length}통으로 분할)`);
   } else {
     console.log("새로 열린 회차 없음");
   }
