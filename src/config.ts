@@ -1,0 +1,35 @@
+// 실제 브라우저 네트워크 캡처로 확인한 값들.
+// 감시 대상을 추가/삭제하고 싶으면 WATCH_TARGETS 배열만 고치면 됩니다.
+
+export interface WatchTarget {
+  label: string; // 알림 메시지에 표시될 이름
+  siteNo: string; // 극장 코드
+  movNo: string; // 영화 코드
+  keyword: string; // 관 이름(scnsNm)에 이 문자열이 포함되면 알림 대상
+}
+
+export const CONFIG = {
+  coCd: "A420",
+  rtctlScopCd: "08", // 캡처된 요청에서 그대로 가져온 값 (의미 불명, 고정값으로 사용)
+
+  // 오늘부터 며칠 뒤까지 상영 스케줄을 확인할지
+  daysAhead: 14,
+
+  // 폴링 사이에 상태를 저장해두는 파일 (GitHub Actions에서 커밋되어 다음 실행 때 이어짐)
+  stateFilePath: "data/state.json",
+};
+
+export const WATCH_TARGETS: WatchTarget[] = [
+  {
+    label: "용산 SCREENX · 스파이더맨-브랜드 뉴 데이",
+    siteNo: "0013", // CGV 용산아이파크몰
+    movNo: "30001192",
+    keyword: "SCREENX",
+  },
+  {
+    label: "용아맥 IMAX · 오디세이",
+    siteNo: "0013", // CGV 용산아이파크몰
+    movNo: "30001323",
+    keyword: "IMAX",
+  },
+];
