@@ -34,5 +34,17 @@ jobs:
           git config user.name "cgv-alert-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/state.json
-          git diff --staged --quiet || git commit -m "state update"
-          git push
+          if git diff --staged --quiet; then
+            echo "변경사항 없음, 커밋 생략"
+            exit 0
+          fi
+          git commit -m "state update"
+          for i in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "push 충돌, 최신 내용 받아서 재시도 ($i/5)"
+            git pull --rebase --no-edit origin main
+          done
+          echo "5번 재시도했지만 push 실패"
+          exit 1
