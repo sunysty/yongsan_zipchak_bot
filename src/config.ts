@@ -23,8 +23,8 @@ export const CONFIG = {
   pollIntervalMaxSeconds: 35,
 
   // 한 번 실행(job)이 내부적으로 반복 체크하는 총 시간(초).
-  // 워크플로우 스케줄(5분)보다 살짝 짧게 잡아서, 다음 예약 실행과 안 겹치게 여유를 둠
-  runBudgetSeconds: 4.5 * 60,
+  // 브라우저 실행/쿠키 받기 + Playwright 설치 시간까지 감안해서 5분보다 넉넉히 짧게 잡음
+  runBudgetSeconds: 3.5 * 60,
 
   // 이 날짜(KST) 이후로는 자동으로 체크를 멈춤. 필요하면 이 값만 뒤로 미루면 다시 돌아감.
   expiresAt: "2026-08-14T00:00:00+09:00",
@@ -37,10 +37,12 @@ export const WATCH_TARGETS: WatchTarget[] = [
     movNo: "30001192",
     keyword: "SCREENX",
   },
-  {
-    label: "용아맥 IMAX · 오디세이",
-    siteNo: "0013", // CGV 용산아이파크몰
-    movNo: "30001323",
-    keyword: "IMAX",
-  },
+  // 용아맥 IMAX · 오디세이는 다른 봇으로 이미 받고 있어서 제외함.
+  // 다시 필요하면 아래 주석 풀면 됨:
+  // {
+  //   label: "용아맥 IMAX · 오디세이",
+  //   siteNo: "0013",
+  //   movNo: "30001323",
+  //   keyword: "IMAX",
+  // },
 ];

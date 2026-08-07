@@ -4,7 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "tsx src/index.ts"
+    "start": "tsx src/index.ts",
+    "test": "tsx --test src/dates.test.ts src/matching.test.ts"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

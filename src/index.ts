@@ -1,9 +1,12 @@
 import { readFile, writeFile } from "node:fs/promises";
+import type { Page } from "playwright";
 import { CONFIG, WATCH_TARGETS } from "./config.js";
 import { fetchScheduleForDate, CgvApiError } from "./cgvClient.js";
+import { openBrowserSession } from "./browserSession.js";
 import { loadState, saveState } from "./state.js";
 import { sendTelegramMessage } from "./telegram.js";
 import { getKstDateStrings, formatShowtimeLabel } from "./dates.js";
+import { matchesKeyword } from "./matching.js";
 import type { StateFile, StoredShow } from "./types.js";
 
 const FAILURE_MARKER_PATH = "data/last_failure_alert.txt";
@@ -23,10 +26,6 @@ async function markFailureAlertSent() {
   await writeFile(FAILURE_MARKER_PATH, new Date().toISOString(), "utf-8");
 }
 
-function matchesKeyword(keyword: string, ...names: (string | undefined)[]): boolean {
-  return names.some((n) => n?.toUpperCase().includes(keyword.toUpperCase()));
-}
-
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
@@ -35,6 +34,7 @@ type NewlyFound = { label: string; showLabel: string; scnsNm: string; frSeatCnt:
 
 /** 한 번의 체크 사이클: 모든 대상 x 모든 날짜를 조회해서 knownState 기준으로 새로 생긴 회차를 찾는다. */
 async function checkOnce(
+  page: Page,
   knownState: StateFile
 ): Promise<{ updatedState: StateFile; newlyFound: NewlyFound[]; anySucceeded: boolean }> {
   const updatedState: StateFile = { ...knownState };
@@ -46,7 +46,7 @@ async function checkOnce(
     for (const scnYmd of dates) {
       let showtimes;
       try {
-        showtimes = await fetchScheduleForDate(scnYmd, target.siteNo, target.movNo);
+        showtimes = await fetchScheduleForDate(page, scnYmd, target.siteNo, target.movNo);
         anySucceeded = true;
       } catch (err) {
         const msg = err instanceof CgvApiError ? err.message : String(err);
@@ -122,28 +122,36 @@ async function main() {
   let anySucceededEver = false;
   let cycles = 0;
 
-  while (Date.now() - startedAt < budgetMs) {
-    cycles++;
-    const { updatedState, newlyFound, anySucceeded } = await checkOnce(knownState);
-    knownState = updatedState;
-    if (anySucceeded) anySucceededEver = true;
+  console.log("브라우저 세션 여는 중 (CGV 홈페이지 방문해서 쿠키 받는 중)...");
+  const session = await openBrowserSession();
+  console.log("브라우저 세션 준비 완료");
 
-    if (newlyFound.length > 0) {
-      console.log(`[cycle ${cycles}] 새 회차 ${newlyFound.length}건 발견, 알림 전송`);
-      await notify(newlyFound);
-    } else {
-      console.log(`[cycle ${cycles}] 새로 열린 회차 없음`);
+  try {
+    while (Date.now() - startedAt < budgetMs) {
+      cycles++;
+      const { updatedState, newlyFound, anySucceeded } = await checkOnce(session.page, knownState);
+      knownState = updatedState;
+      if (anySucceeded) anySucceededEver = true;
+
+      if (newlyFound.length > 0) {
+        console.log(`[cycle ${cycles}] 새 회차 ${newlyFound.length}건 발견, 알림 전송`);
+        await notify(newlyFound);
+      } else {
+        console.log(`[cycle ${cycles}] 새로 열린 회차 없음`);
+      }
+
+      const elapsed = Date.now() - startedAt;
+      if (elapsed >= budgetMs) break;
+      const remaining = budgetMs - elapsed;
+      // 매번 똑같은 간격이면 그 자체가 봇 패턴이라, min~max 사이 랜덤 간격을 씀
+      const jitterMs =
+        (CONFIG.pollIntervalMinSeconds +
+          Math.random() * (CONFIG.pollIntervalMaxSeconds - CONFIG.pollIntervalMinSeconds)) *
+        1000;
+      await sleep(Math.min(jitterMs, remaining));
     }
-
-    const elapsed = Date.now() - startedAt;
-    if (elapsed >= budgetMs) break;
-    const remaining = budgetMs - elapsed;
-    // 매번 똑같은 간격이면 그 자체가 봇 패턴이라, min~max 사이 랜덤 간격을 씀
-    const jitterMs =
-      (CONFIG.pollIntervalMinSeconds +
-        Math.random() * (CONFIG.pollIntervalMaxSeconds - CONFIG.pollIntervalMinSeconds)) *
-      1000;
-    await sleep(Math.min(jitterMs, remaining));
+  } finally {
+    await session.close();
   }
 
   if (!anySucceededEver) {

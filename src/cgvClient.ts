@@ -1,3 +1,4 @@
+import type { Page } from "playwright";
 import { CONFIG } from "./config.js";
 import type { CgvShowtime } from "./types.js";
 
@@ -27,7 +28,6 @@ function findShowtimeArray(node: unknown, depth = 0): CgvShowtime[] | null {
 
   if (typeof node === "object") {
     const obj = node as Record<string, unknown>;
-    // 빠른 경로: 확인된 구조
     if (Array.isArray(obj.data)) {
       const found = findShowtimeArray(obj.data, depth + 1);
       if (found) return found;
@@ -43,7 +43,10 @@ function findShowtimeArray(node: unknown, depth = 0): CgvShowtime[] | null {
 
 export class CgvApiError extends Error {}
 
+// page.evaluate 안에서 실행되는 fetch는 Node의 fetch가 아니라
+// 실제 브라우저(Chromium)의 네트워크 스택을 그대로 씁니다 — 쿠키, TLS 지문 등이 진짜 브라우저와 동일합니다.
 export async function fetchScheduleForDate(
+  page: Page,
   scnYmd: string,
   siteNo: string,
   movNo: string
@@ -55,35 +58,33 @@ export async function fetchScheduleForDate(
   url.searchParams.set("movNo", movNo);
   url.searchParams.set("rtctlScopCd", CONFIG.rtctlScopCd);
 
-  const res = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-      "Accept-Language": "ko-KR",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    },
-  });
+  const result = await page.evaluate(async (targetUrl: string) => {
+    try {
+      const res = await fetch(targetUrl, { headers: { Accept: "application/json" } });
+      const text = await res.text();
+      return { ok: true as const, status: res.status, text };
+    } catch (err) {
+      return { ok: false as const, status: 0, text: String(err) };
+    }
+  }, url.toString());
 
-  if (!res.ok) {
+  if (!result.ok || result.status !== 200) {
     throw new CgvApiError(
-      `CGV API가 ${res.status}를 반환했습니다 (siteNo=${siteNo}, movNo=${movNo}, ${scnYmd}). Cloudflare 차단일 수 있습니다.`
+      `CGV API가 ${result.status}를 반환했습니다 (siteNo=${siteNo}, movNo=${movNo}, ${scnYmd}). Cloudflare 차단일 수 있습니다.`
     );
   }
 
-  const text = await res.text();
   let json: unknown;
   try {
-    json = JSON.parse(text);
+    json = JSON.parse(result.text);
   } catch {
-    // JSON이 아니면 Cloudflare 챌린지 페이지(HTML) 등을 받은 것으로 간주
     throw new CgvApiError(
-      `CGV API 응답이 JSON이 아닙니다 (siteNo=${siteNo}, movNo=${movNo}, ${scnYmd}). Cloudflare 봇 차단 가능성 있음. 응답 앞부분: ${text.slice(0, 200)}`
+      `CGV API 응답이 JSON이 아닙니다 (siteNo=${siteNo}, movNo=${movNo}, ${scnYmd}). 응답 앞부분: ${result.text.slice(0, 200)}`
     );
   }
 
   const showtimes = findShowtimeArray(json);
   if (!showtimes) {
-    // 그 날짜에 상영이 아예 없는 경우일 수도 있으니 에러 대신 빈 배열
     return [];
   }
   return showtimes;
