@@ -12,11 +12,22 @@ export const CONFIG = {
   coCd: "A420",
   rtctlScopCd: "08", // 캡처된 요청에서 그대로 가져온 값 (의미 불명, 고정값으로 사용)
 
-  // 오늘부터 며칠 뒤까지 상영 스케줄을 확인할지
-  daysAhead: 14,
+  // 오늘부터 며칠 뒤까지 상영 스케줄을 확인할지 (좁게 잡아서 요청량을 줄임)
+  daysAhead: 2,
 
   // 폴링 사이에 상태를 저장해두는 파일 (GitHub Actions에서 커밋되어 다음 실행 때 이어짐)
   stateFilePath: "data/state.json",
+
+  // 체크 사이 대기 시간(초) 범위. 매번 이 사이 랜덤 값으로 쉼 (일정한 간격은 봇 패턴이라 흔들어줌)
+  pollIntervalMinSeconds: 15,
+  pollIntervalMaxSeconds: 35,
+
+  // 한 번 실행(job)이 내부적으로 반복 체크하는 총 시간(초).
+  // 워크플로우 스케줄(5분)보다 살짝 짧게 잡아서, 다음 예약 실행과 안 겹치게 여유를 둠
+  runBudgetSeconds: 4.5 * 60,
+
+  // 이 날짜(KST) 이후로는 자동으로 체크를 멈춤. 필요하면 이 값만 뒤로 미루면 다시 돌아감.
+  expiresAt: "2026-08-14T00:00:00+09:00",
 };
 
 export const WATCH_TARGETS: WatchTarget[] = [

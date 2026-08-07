@@ -6,10 +6,19 @@ CGV 특정 극장/영화/특별관 조합에 새 회차가 뜨면 텔레그램�
 
 ## 동작 방식
 
-5분마다(GitHub Actions 스케줄) `WATCH_TARGETS`에 등록된 각 대상마다
-`https://cgv.co.kr/api/v1/booking/searchSchByMov` 를 오늘부터 14일치 호출해서,
-관 이름에 지정한 키워드(SCREENX, IMAX 등)가 들어간 회차 목록을 이전 실행 결과(`data/state.json`)와 비교합니다.
-새로 생긴 회차가 있으면 텔레그램으로 알림을 보내고, 상태 파일을 갱신해서 리포에 커밋합니다.
+GitHub Actions 스케줄은 5분보다 짧게 못 도는 플랫폼 제약이 있어서, 대신 한 번 실행(job)이 시작되면
+내부적으로 `src/config.ts`의 `pollIntervalSeconds`(기본 25초) 간격으로 `runBudgetSeconds`(기본 4.5분) 동안
+계속 반복 체크합니다. 5분 스케줄은 이 반복 루프를 계속 이어 붙이는 역할만 합니다 — 체감상 25초 간격으로 도는 셈입니다.
+
+매 체크마다 `WATCH_TARGETS`에 등록된 각 대상별로 `https://cgv.co.kr/api/v1/booking/searchSchByMov` 를
+오늘부터 14일치 호출해서, 관 이름에 지정한 키워드(SCREENX, IMAX 등)가 들어간 회차 목록을
+지금까지 알고 있던 목록과 비교합니다. 새로 생긴 회차가 있으면 그 즉시 텔레그램으로 알림을 보내고,
+job이 끝날 때 상태 파일(`data/state.json`)을 한 번에 갱신해서 리포에 커밋합니다.
+
+**주의**: 이 방식은 요청 빈도가 5분 간격 대비 훨씬 높습니다(초당 대신 25초당 요청이지만 누적 횟수가 많음).
+GitHub Actions 무료 사용량을 계속 쓰려면 **리포가 public이어야** 합니다 (private는 월 2000분 제한 — 이 방식으론 며칠 안에 소진됨).
+public으로 바꾸는 법: 리포 Settings → 맨 아래 Danger Zone → Change repository visibility → Public.
+코드에는 토큰 같은 민감정보가 없으니 public으로 바꿔도 보안상 문제는 없지만, 코드 자체는 누구나 볼 수 있게 됩니다.
 
 ## 처음 설정하는 법
 
