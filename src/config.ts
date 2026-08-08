@@ -12,8 +12,10 @@ export const CONFIG = {
   coCd: "A420",
   rtctlScopCd: "08", // 캡처된 요청에서 그대로 가져온 값 (의미 불명, 고정값으로 사용)
 
-  // 오늘부터 며칠 뒤까지 상영 스케줄을 확인할지 (좁게 잡아서 요청량을 줄임)
-  daysAhead: 2,
+  // 오늘부터 며칠 뒤까지 상영 스케줄을 확인할지.
+  // expiresAt까지 놓치는 요일이 없도록 그 기간 전체를 커버하게 잡음 (좁게 잡았다가 원하는 요일이
+  // 범위 밖이라 놓친 적이 있어서 늘림 — daysAhead가 짧을수록 요청량은 줄지만 놓칠 위험도 커짐)
+  daysAhead: 7,
 
   // 폴링 사이에 상태를 저장해두는 파일 (GitHub Actions에서 커밋되어 다음 실행 때 이어짐)
   stateFilePath: "data/state.json",
@@ -27,7 +29,7 @@ export const CONFIG = {
   runBudgetSeconds: 3.5 * 60,
 
   // 이 날짜(KST) 이후로는 자동으로 체크를 멈춤. 필요하면 이 값만 뒤로 미루면 다시 돌아감.
-  expiresAt: "2026-08-14T00:00:00+09:00",
+  expiresAt: "2026-08-15T00:00:00+09:00",
 };
 
 export const WATCH_TARGETS: WatchTarget[] = [

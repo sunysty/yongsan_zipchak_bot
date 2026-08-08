@@ -36,14 +36,23 @@ type NewlyFound = { label: string; showLabel: string; scnsNm: string; frSeatCnt:
 async function checkOnce(
   page: Page,
   knownState: StateFile
-): Promise<{ updatedState: StateFile; newlyFound: NewlyFound[]; anySucceeded: boolean }> {
+): Promise<{
+  updatedState: StateFile;
+  newlyFound: NewlyFound[];
+  anySucceeded: boolean;
+  totalRequests: number;
+  failedRequests: number;
+}> {
   const updatedState: StateFile = { ...knownState };
   const newlyFound: NewlyFound[] = [];
   const dates = getKstDateStrings(CONFIG.daysAhead);
   let anySucceeded = false;
+  let totalRequests = 0;
+  let failedRequests = 0;
 
   for (const target of WATCH_TARGETS) {
     for (const scnYmd of dates) {
+      totalRequests++;
       let showtimes;
       try {
         showtimes = await fetchScheduleForDate(page, scnYmd, target.siteNo, target.movNo);
@@ -51,6 +60,9 @@ async function checkOnce(
       } catch (err) {
         const msg = err instanceof CgvApiError ? err.message : String(err);
         console.error(msg);
+        failedRequests++;
+        // 요청 하나가 막혔다고 바로 다음 요청도 몰아치면 패턴이 더 튀니, 실패했을 때는 잠깐 더 쉼
+        await sleep(500 + Math.random() * 500);
         continue;
       }
 
@@ -80,12 +92,12 @@ async function checkOnce(
         }
       }
 
-      // CGV 서버에 너무 빠르게 연달아 요청하지 않도록 살짝 텀을 둠
-      await sleep(200);
+      // CGV 서버에 너무 빠르게 연달아 요청하지 않도록 텀을 둠 (고정 간격이면 그 자체가 패턴이라 랜덤하게)
+      await sleep(400 + Math.random() * 500);
     }
   }
 
-  return { updatedState, newlyFound, anySucceeded };
+  return { updatedState, newlyFound, anySucceeded, totalRequests, failedRequests };
 }
 
 async function notify(newlyFound: NewlyFound[]) {
@@ -121,6 +133,8 @@ async function main() {
 
   let anySucceededEver = false;
   let cycles = 0;
+  let totalRequestsEver = 0;
+  let totalFailedEver = 0;
 
   console.log("브라우저 세션 여는 중 (CGV 홈페이지 방문해서 쿠키 받는 중)...");
   const session = await openBrowserSession();
@@ -129,9 +143,14 @@ async function main() {
   try {
     while (Date.now() - startedAt < budgetMs) {
       cycles++;
-      const { updatedState, newlyFound, anySucceeded } = await checkOnce(session.page, knownState);
+      const { updatedState, newlyFound, anySucceeded, totalRequests, failedRequests } = await checkOnce(
+        session.page,
+        knownState
+      );
       knownState = updatedState;
       if (anySucceeded) anySucceededEver = true;
+      totalRequestsEver += totalRequests;
+      totalFailedEver += failedRequests;
 
       if (newlyFound.length > 0) {
         console.log(`[cycle ${cycles}] 새 회차 ${newlyFound.length}건 발견, 알림 전송`);
@@ -167,8 +186,21 @@ async function main() {
     return;
   }
 
+  // 전체 실패는 아니어도 상당수가 막혔으면 (부분 차단) 조용히 넘어가지 않고 알려줌 —
+  // 이 신호를 놓치면 막힌 날짜의 새 회차만 계속 빠지는데도 실행 자체는 "성공"으로 보임
+  const failureRate = totalRequestsEver > 0 ? totalFailedEver / totalRequestsEver : 0;
+  if (failureRate >= 0.4) {
+    console.warn(`요청 중 ${totalFailedEver}/${totalRequestsEver}건 실패 (부분 차단 의심)`);
+    if (await shouldSendFailureAlert()) {
+      await sendTelegramMessage(
+        `⚠️ CGV 알림봇 경고\n\n일부 요청이 계속 실패하고 있습니다 (${totalFailedEver}/${totalRequestsEver}건, 부분 차단 의심).\n일부 날짜의 새 회차를 놓치고 있을 수 있으니 GitHub Actions 로그를 확인해주세요.`
+      );
+      await markFailureAlertSent();
+    }
+  }
+
   await saveState(knownState);
-  console.log(`총 ${cycles}회 체크 완료`);
+  console.log(`총 ${cycles}회 체크 완료 (요청 ${totalRequestsEver}건 중 실패 ${totalFailedEver}건)`);
 }
 
 main().catch((err) => {
