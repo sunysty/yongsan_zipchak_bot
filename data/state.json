@@ -300,7 +300,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260809",
     "scnsrtTm": "1040",
-    "frSeatCnt": "1",
+    "frSeatCnt": "2",
     "firstSeenAt": "2026-08-06T05:44:44.497Z"
   },
   "30001192_0013_20260809_004_1340": {
@@ -340,7 +340,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260809",
     "scnsrtTm": "2540",
-    "frSeatCnt": "12",
+    "frSeatCnt": "6",
     "firstSeenAt": "2026-08-06T05:44:44.497Z"
   },
   "30001192_0013_20260809_012_0840": {
@@ -388,7 +388,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260809",
     "scnsrtTm": "2340",
-    "frSeatCnt": "4",
+    "frSeatCnt": "6",
     "firstSeenAt": "2026-08-06T05:44:44.497Z"
   },
   "30001192_0013_20260810_004_0650": {
@@ -404,7 +404,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "0950",
-    "frSeatCnt": "2",
+    "frSeatCnt": "1",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001192_0013_20260810_004_1250": {
@@ -492,7 +492,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "2600",
-    "frSeatCnt": "56",
+    "frSeatCnt": "54",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001323_0013_20260806_018_1700": {
@@ -1148,7 +1148,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260811",
     "scnsrtTm": "2600",
-    "frSeatCnt": "15",
+    "frSeatCnt": "14",
     "firstSeenAt": "2026-08-06T10:47:50.988Z"
   },
   "30001192_0013_20260811_012_0700": {
@@ -1196,7 +1196,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260811",
     "scnsrtTm": "2200",
-    "frSeatCnt": "8",
+    "frSeatCnt": "10",
     "firstSeenAt": "2026-08-06T10:47:50.988Z"
   },
   "30001192_0013_20260811_012_2500": {
@@ -1300,7 +1300,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260812",
     "scnsrtTm": "2440",
-    "frSeatCnt": "31",
+    "frSeatCnt": "33",
     "firstSeenAt": "2026-08-08T14:20:04.655Z"
   }
 }
