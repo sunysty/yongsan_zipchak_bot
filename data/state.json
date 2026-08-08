@@ -292,7 +292,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260809",
     "scnsrtTm": "0740",
-    "frSeatCnt": "4",
+    "frSeatCnt": "6",
     "firstSeenAt": "2026-08-06T05:44:44.497Z"
   },
   "30001192_0013_20260809_004_1040": {
@@ -332,7 +332,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260809",
     "scnsrtTm": "2240",
-    "frSeatCnt": "3",
+    "frSeatCnt": "2",
     "firstSeenAt": "2026-08-06T05:44:44.497Z"
   },
   "30001192_0013_20260809_004_2540": {
@@ -340,7 +340,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260809",
     "scnsrtTm": "2540",
-    "frSeatCnt": "11",
+    "frSeatCnt": "8",
     "firstSeenAt": "2026-08-06T05:44:44.497Z"
   },
   "30001192_0013_20260809_012_0840": {
@@ -348,7 +348,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260809",
     "scnsrtTm": "0840",
-    "frSeatCnt": "6",
+    "frSeatCnt": "5",
     "firstSeenAt": "2026-08-06T05:44:44.497Z"
   },
   "30001192_0013_20260809_012_1140": {
@@ -1156,7 +1156,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260811",
     "scnsrtTm": "0700",
-    "frSeatCnt": "26",
+    "frSeatCnt": "25",
     "firstSeenAt": "2026-08-06T10:47:50.988Z"
   },
   "30001192_0013_20260811_012_1000": {
@@ -1212,7 +1212,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260812",
     "scnsrtTm": "0720",
-    "frSeatCnt": "10",
+    "frSeatCnt": "6",
     "firstSeenAt": "2026-08-08T14:20:04.655Z"
   },
   "30001192_0013_20260812_004_1020": {
@@ -1236,7 +1236,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260812",
     "scnsrtTm": "1620",
-    "frSeatCnt": "3",
+    "frSeatCnt": "2",
     "firstSeenAt": "2026-08-08T14:20:04.655Z"
   },
   "30001192_0013_20260812_004_2200": {
@@ -1252,7 +1252,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260812",
     "scnsrtTm": "2500",
-    "frSeatCnt": "14",
+    "frSeatCnt": "11",
     "firstSeenAt": "2026-08-08T14:20:04.655Z"
   },
   "30001192_0013_20260812_012_0640": {
@@ -1300,7 +1300,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260812",
     "scnsrtTm": "2440",
-    "frSeatCnt": "33",
+    "frSeatCnt": "32",
     "firstSeenAt": "2026-08-08T14:20:04.655Z"
   }
 }
