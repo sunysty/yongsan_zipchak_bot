@@ -54,7 +54,16 @@ jobs:
               exit 0
             fi
             echo "push 충돌, 최신 내용 받아서 재시도 ($i/5)"
-            git pull --rebase --no-edit origin main
+            git fetch origin main
+            # data/state.json은 여러 실행이 각자 통째로 다시 쓰는 파일이라 텍스트 충돌이 날 수 있음.
+            # 이미 이번 실행에서 발견한 회차는 텔레그램 알림이 나간 뒤라 상태 파일 반영이 한 번 빠져도
+            # 치명적이지 않으므로, 충돌나면 억지로 맞추려 하지 말고 원격(최신) 쪽을 우선해서 병합.
+            if ! git merge -X theirs --no-edit origin/main; then
+              echo "병합도 실패, 원격 기준으로 강제 정렬"
+              git merge --abort || true
+              git reset --hard origin/main
+              exit 0
+            fi
           done
           echo "5번 재시도했지만 push 실패"
           exit 1
