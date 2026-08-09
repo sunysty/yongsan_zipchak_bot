@@ -396,7 +396,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "0650",
-    "frSeatCnt": "19",
+    "frSeatCnt": "25",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001192_0013_20260810_004_0950": {
@@ -404,7 +404,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "0950",
-    "frSeatCnt": "8",
+    "frSeatCnt": "4",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001192_0013_20260810_004_1250": {
@@ -428,7 +428,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "2200",
-    "frSeatCnt": "3",
+    "frSeatCnt": "4",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001192_0013_20260810_004_2500": {
@@ -436,7 +436,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "2500",
-    "frSeatCnt": "12",
+    "frSeatCnt": "8",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001192_0013_20260810_012_0800": {
@@ -444,7 +444,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "0800",
-    "frSeatCnt": "12",
+    "frSeatCnt": "10",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001192_0013_20260810_012_1100": {
@@ -460,7 +460,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "1400",
-    "frSeatCnt": "2",
+    "frSeatCnt": "4",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001192_0013_20260810_012_1700": {
@@ -468,7 +468,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260810",
     "scnsrtTm": "1700",
-    "frSeatCnt": "3",
+    "frSeatCnt": "2",
     "firstSeenAt": "2026-08-06T05:44:45.116Z"
   },
   "30001192_0013_20260810_012_2000": {
@@ -1100,7 +1100,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260811",
     "scnsrtTm": "0800",
-    "frSeatCnt": "11",
+    "frSeatCnt": "10",
     "firstSeenAt": "2026-08-06T10:47:50.988Z"
   },
   "30001192_0013_20260811_004_1100": {
@@ -1252,7 +1252,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(4면, SCREENX DOLBY ATMOS mix 2D)",
     "scnYmd": "20260812",
     "scnsrtTm": "2500",
-    "frSeatCnt": "6",
+    "frSeatCnt": "10",
     "firstSeenAt": "2026-08-08T14:20:04.655Z"
   },
   "30001192_0013_20260812_012_0640": {
@@ -1308,7 +1308,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260813",
     "scnsrtTm": "0630",
-    "frSeatCnt": "27",
+    "frSeatCnt": "28",
     "firstSeenAt": "2026-08-09T06:11:34.314Z"
   },
   "30001192_0013_20260813_012_0930": {
@@ -1316,7 +1316,7 @@
     "prodNm": "스파이더맨-브랜드 뉴 데이(SCREENX 2D)",
     "scnYmd": "20260813",
     "scnsrtTm": "0930",
-    "frSeatCnt": "9",
+    "frSeatCnt": "12",
     "firstSeenAt": "2026-08-09T06:11:34.314Z"
   },
   "30001192_0013_20260813_012_1500": {
